@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package empty;
+option go_package = "my_empty";
+option optimize_for = CODE_SIZE;
+
+message Foo {
+}
