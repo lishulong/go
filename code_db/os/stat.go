@@ -14,7 +14,7 @@ func TestStat() {
 
 	EFN := "stat.go"
 	if _, err := os.Stat(EFN); err == nil {
-		fmt.Printf("[%s] exist\n", EFN)
+		fmt.Printf("[%s] exist, os.IsNotExist: %v\n", EFN, os.IsNotExist(err))
 
 	} else if os.IsNotExist(err) {
 		fmt.Printf("[%s] not exist\n", EFN)
@@ -23,7 +23,6 @@ func TestStat() {
 		fmt.Printf("[%s] error occured: %v\n", err.(*os.PathError))
 
 	}
-
 }
 
 func main() {
