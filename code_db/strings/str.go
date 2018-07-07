@@ -67,8 +67,31 @@ func strByteArray() {
 	fmt.Println(a[:0])
 }
 
+func TestSplit() {
+	src := []string{
+		"hello",
+		"/",
+		"/a/b/c/",
+		"/a/b/c//",
+		"/a/b/c///",
+	}
+
+	for _, s := range src {
+		sSlice := strings.Split(s, "/")
+
+		fmt.Printf("%s: ", s)
+		for _, ss := range sSlice {
+			fmt.Printf("[%s]", ss)
+		}
+		fmt.Printf("\n")
+	}
+
+}
+
 func main() {
 	// compare()
 
-	strByteArray()
+	//strByteArray()
+
+	TestSplit()
 }
