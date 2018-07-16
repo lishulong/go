@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+var _ = strings.Compare
+
 func TestScaner() {
 	var data string
 
@@ -31,37 +33,48 @@ func TestScaner() {
 
 func TestChunkedEncodingScaner() {
 	src := []string{
-		"Mozilla", "Developer", "Network",
+		"Mozallia", "Developer", "Network", "", "",
 	}
 
 	data := new(bytes.Buffer)
 	chunkedWr := httputil.NewChunkedWriter(data)
 
-	/*
-	 * // send one by one
-	 * for _, s := range src {
-	 *     n, err := chunkedWr.Write([]byte(s + "\n"))
-	 *     fmt.Printf("lsl-debug: %s, %d, %v\n", s, n, err)
-	 * }
-	 * chunkedWr.Close()
-	 */
+	// send one by one
+	for _, s := range src {
+		n, err := chunkedWr.Write([]byte(s + "\n"))
+		fmt.Printf("lsl-debug: %s, %d, %v\n", s, n, err)
+	}
+	chunkedWr.Close()
+	fmt.Printf("data sent: [%v]\n", data.Bytes())
+	fmt.Printf("================\n")
 
 	// send all together
-	toSend := strings.Join(src, "\n")
-	n, err := chunkedWr.Write([]byte(toSend))
-	chunkedWr.Close()
+	//toSend := strings.Join(src, "\n")
+	//fmt.Printf("toSend: [%s]\n", toSend)
+	//n, err := chunkedWr.Write([]byte(toSend))
+	//chunkedWr.Close()
 
-	fmt.Printf("send: [%s], %d, %v\n", toSend, n, err)
-
+	//fmt.Printf("send: [%s], %d, %v\n", data.String(), n, err)
 	//fmt.Printf("lsl-debug: %s\n", string(data.Bytes()))
 
+	/*
+	 *     // read from chunked reader
+	 *     chunkedRd := httputil.NewChunkedReader(data)
+	 *     buf := make([]byte, 100)
+	 *     n, err := chunkedRd.Read(buf)
+	 *     fmt.Printf("lsl-debug: %v, %v\n", n, err)
+	 *
+	 */
 	chunkedRd := httputil.NewChunkedReader(data)
 	sc := bufio.NewScanner(chunkedRd)
 
-	for sc.Scan() {
+	for cnt := 0; sc.Scan(); cnt++ {
 		content := string(sc.Bytes())
-		fmt.Printf("received: %s\n", content)
+		fmt.Printf("received: %d [%s]\n", cnt, content)
 	}
+
+	err := sc.Err()
+	fmt.Printf("lsl-debug: err: %v\n", err)
 }
 
 func main() {
