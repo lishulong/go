@@ -13,11 +13,11 @@ func run(sema *semaphore.Weighted, cnt int) {
 }
 
 func TestUsage() {
-	var ctx = context.TODO()
 	var semaWeight = 10
 	sema := semaphore.NewWeighted(int64(semaWeight))
 
 	for cnt := 0; cnt < 2*semaWeight; cnt++ {
+		ctx := context.TODO()
 		if err := sema.Acquire(ctx, 1); err != nil {
 			log.Fatalf("error occured during sema.acquire: %v", err)
 		}
